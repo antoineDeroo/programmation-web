@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <canvas id="myCanvas" width="500" height="500" style="border:1px solid #d3d3d3;">
+        <script>
+            var c = document.getElementById("myCanvas");
+            var ctx = c.getContext("2d");
+            var myVar;
+            init();
+            
+            function init(){
+                carre1= new carre(100,100,50,50);
+                ctx.fillRect(10,10,10,10);
+                myVar = setInterval( updateUniverse, 500);
+            }
+            
+            function updateUniverse(){
+                carre1.update();
+            }
+            
+            function carre(x,y,largeur,hauteur){
+                this.x=x;
+                this.y=y;
+                this.largeur=largeur;
+                this.hauteur=hauteur;
+                
+                function update(){
+                    if(this.x>=400){
+                        this.x=0;
+                        if(this.y>=400){
+                            this.y=0;
+                        }
+                        else{
+                            this.y++;
+                        }
+                    }
+                    else{
+                        this.x++;
+                    }
+                    this.render();
+                }
+                
+                function render(){
+                    this.x;
+                    this.y;
+                    this.largeur;
+                    this.hauteur;
+                    
+                    ctx.fillRect(this.x,this.y,largeur,hauteur);
+                }
+                
+            }
+        </script>
+    </body>
+</html>
