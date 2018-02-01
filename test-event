@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			marche
+		</title>
+	</head>
+	<body>
+		<canvas id="myCanvas" width="1000" height="700" >
+	</body>
+</html>
+<script>
+	var tab=[0,0,0,0];
+	var img = new Image();
+	img.src = 'hero_walk_cycle_spritesheet_by_mrnoobtastic-d3defej.png';
+	var ctx = document.getElementById('myCanvas').getContext('2d');
+	window.addEventListener('keydown', doKeyDown, true);
+	var date;
+	var initDate= new Date();
+	var bonhomme1;
+	
+	function pausecomp(millis) 
+		{
+			var date = new Date();
+			var curDate = null;
+			do { 
+				curDate = new Date(); 
+			} while(curDate-date < millis);
+		} 
+	
+	init();
+	function init(){
+		bonhomme1= new Bonhomme(100,100);
+		mainLoop();
+	}
+	
+	function mainLoop(){
+		updateUniverse();
+		renderUniverse();
+		requestAnimationFrame(mainLoop,10);
+		pausecomp(10);
+	}
+	
+	function updateUniverse(){
+		bonhomme1.update();
+	}
+	
+	function renderUniverse(){
+		bonhomme1.render();
+	}
+	
+	function Bonhomme(x,y){
+		this.increment=0;
+		this.x=x;
+		this.y=y;
+		this.vitesse=35;
+		this.enMarche=false;
+		this.orientation='bas';
+		this.update= function(){
+			if(tab[0]==1){
+				this.orientation='up';
+				tab[0]=0;
+				this.enMarche=true;
+				this.y=this.y-this.vitesse;
+			}
+			else{
+				if(tab[1]==1){
+				this.orientation='down';
+				tab[1]=0;
+				this.enMarche=true;
+				this.y=this.y+this.vitesse;
+				}
+				else{
+					if(tab[2]==1){
+						this.orientation='left';
+						tab[2]=0;
+						this.enMarche=true;
+						this.x=this.x-this.vitesse;
+					}
+					else{
+						if(tab[3]==1){
+							this.orientation='right';
+							tab[3]=0;
+							this.enMarche=true;
+							this.x=this.x+this.vitesse;
+						}
+						else{
+							this.enMarche=false;
+						}
+					}
+				}
+			}	
+			
+		}
+		this.render= function(){
+			if(this.increment==10){
+				this.increment=0;
+			}
+			
+			if(this.orientation=='down'){
+				ctx.drawImage(img, this.increment*64, 128,64,64,this.x,this.y,64,64);
+			}
+			if(this.orientation=='up'){
+				ctx.drawImage(img, this.increment*64, 0,64,64,this.x,this.y,64,64);
+			}
+			if(this.orientation=='right'){
+				ctx.drawImage(img, this.increment*64, 192,64,64,this.x,this.y,64,64);
+			}
+			if(this.orientation=='left'){
+				ctx.drawImage(img, this.increment*64, 64,64,64,this.x,this.y,64,64);
+			}
+			if(this.enMarche){
+				date=new Date();
+				if(date-initDate>250){
+					this.increment++;
+					initDate=date;
+				}
+			}
+		}
+	}
+	
+	function doKeyDown(e){
+		e.preventDefault();
+		//down
+		if(e==40){
+			ctx.clearRect(0,0,1000,700);
+			tab[1]=1;
+		}
+		//up
+		if(e==38){
+			ctx.clearRect(0,0,1000,700);
+			tab[0]=1;
+		}
+		//left
+		if(e==37){
+			ctx.clearRect(0,0,1000,700);
+			tab[2]=1;
+		}
+		//right
+		if(e==39){
+			ctx.clearRect(0,0,1000,700);
+			tab[3]=1;
+		}
+	}
+		
+</script>	
