@@ -1,0 +1,184 @@
+<html>
+
+
+<CANVAS WIDTH="1000" HEIGHT="800" ID="canvas_1" tabindex="0" style="border-style: solid; border-width: 2px; width: 500px;">
+			Canvas tag not supported
+		</CANVAS>
+
+<p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>.</p><p>
+
+
+
+<head>
+	<title>
+		jeu
+	</title>
+</head>
+    <script>
+var canvas = document.getElementById("canvas_1");
+window.addEventListener('keydown', doKeyDown, true);
+ctx = canvas.getContext("2d");
+
+var bonhomme1 = new Bonhomme();
+var tab=[1,0,0,0];
+var image;
+var initdate= new Date();
+var date;
+
+function pausecomp(millis) 
+		{
+			var date = new Date();
+			var curDate = null;
+			do { 
+				curDate = new Date(); 
+			} while(curDate-date < millis);
+		} 
+
+init();
+
+
+function init() {
+	  // Draw slice
+		mainLoop();
+		requestAnimationFrame(init);
+		pausecomp(10);  
+}
+	
+
+
+function mainLoop(){
+	upDateUniverse();
+	renderUniverse();
+}
+function upDateUniverse(){
+	bonhomme1.update();
+}
+function renderUniverse(){
+	bonhomme1.draw();
+}
+function Bonhomme(){
+	this.orient="bas";
+	this.increment=0;
+	this.vitesse=20;
+	this.x=128;
+	this.y=128;
+	
+	this.draw = function(){
+		ctx.clearRect(0,0,1000,800);
+		image=new Image();
+		image.src="hero_walk_cycle_spritesheet_by_mrnoobtastic-d3defej.png";
+		if(this.increment==4){
+			this.increment=0;
+		}
+		if(this.orient=="bas"){
+			//alert("bas");
+			ctx.drawImage(image,128*this.increment, 2*128, 128, 128, this.x, this.y, 128, 128);
+		}
+		if(this.orient=="haut"){
+			//alert("haut");
+			ctx.drawImage(image,128*this.increment, 3*128, 128, 128, this.x, this.y, 128, 128);
+		}
+		if(this.orient=="gauche"){
+			//alert("gauche");
+			ctx.drawImage(image,128*this.increment, 0, 128, 128, this.x, this.y,128, 128);
+		}
+		if(this.orient=="droite"){
+			//alert("droite");
+			ctx.drawImage(image,128*this.increment, 1*128, 128, 128, this.x, this.y, 128, 128);
+		}
+		date=new Date();
+		if(date-initdate>=250){
+			this.increment++;
+			initdate=date;
+		}
+		
+	}
+	this.update = function(){
+		if(tab[0]==1){ //down
+			this.orient="bas";
+			tab[0]=0;
+			bonhomme1.y=bonhomme1.y+bonhomme1.vitesse;
+		}
+		if(tab[1]==1){ //up
+			this.orient="haut";
+			tab[1]=0;
+			bonhomme1.y=bonhomme1.y-bonhomme1.vitesse;
+		}
+		if(tab[2]==1){ //left
+			this.orient="gauche";
+			tab[2]=0;
+			bonhomme1.x=bonhomme1.x-bonhomme1.vitesse;
+		}
+		if(tab[3]==1){ //right
+			this.orient="droite";
+			tab[3]=0;
+			bonhomme1.x=bonhomme1.x+bonhomme1.vitesse;
+		}
+	}
+	this.changeOrient= function(o){
+		this.orient=o;
+		this.increment=0;
+	}
+}
+        // Attention, cette implémentation utilise keyCode, dépréciée: utiliser pluôt la propriété key de l'objet keyboardEvent. 
+        //https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent/key...
+        //mais l'alternative proposée par MDN n'est pas reconnue par tous les navigateurs.
+		
+
+
+		
+
+		function doKeyDown(e){ 
+             e.preventDefault();
+
+			//====================
+			//	THE down-arrow KEY
+			//====================
+			if (e.keyCode == 40) {
+				//if(tab[0]!=1){bonhomme1.changerOrient(
+				tab[0]=1;
+				tab[1]=0;
+				tab[2]=0;
+				tab[3]=0;
+			}
+
+			//====================
+			//	THE up-arrow KEY
+			//====================
+			if (e.keyCode == 38) {
+				tab[0]=0;
+				tab[1]=1;
+				tab[2]=0;
+				tab[3]=0;
+				
+			}
+
+			//====================
+			//	THE left-arrow KEY
+			//====================
+			if (e.keyCode == 37) {
+				tab[0]=0;
+				tab[1]=0;
+				tab[2]=1;
+				tab[3]=0;
+			}
+
+			//====================
+			//	THE right-arrow KEY
+			//====================
+			if (e.keyCode == 39) {
+				tab[0]=0;
+				tab[1]=0;
+				tab[2]=0;
+				tab[3]=1;
+    			}
+            }
+            
+            //Space is 32, Enter is 13, Tab is 9, esc is 27, backspace is 8... 
+            // A to Z is 65 to 90
+
+		
+    
+    </script>
+
+</html>
